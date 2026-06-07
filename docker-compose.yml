@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Kontejner za bazu podataka
+  db:
+    image: postgres:15-alpine
+    container_name: art_postgres_db
+    environment:
+      POSTGRES_DB: art_db
+      POSTGRES_USER: belma
+      POSTGRES_PASSWORD: sigurnasifra123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Kontejner za Flask aplikaciju
+  web:
+    build: .
+    container_name: art_web_app
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=art_db
+      - DB_USER=belma
+      - DB_PASSWORD=sigurnasifra123
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
